@@ -1,79 +1,92 @@
-import java.util.Scanner;
 import java.util.Stack;
+import java.util.Scanner;
 
 public class TextEditor {
-    private static String text = "";
-    private static Stack<String> undoStack = new Stack<>();
-    private static Stack<String> redoStack = new Stack<>();
 
-    public static void write(String newText) {
-        undoStack.push(text);  // simpan kondisi sebelumnya
-        text += newText;
-        redoStack.clear(); // setiap write akan menghapus kemungkinan redo lama
+    private static String content = "";
+    private static Stack<String> undoHistory = new Stack<>();
+    private static Stack<String> redoHistory = new Stack<>();
+
+    // Menambah teks
+    public static void tambahTeks(String teks) {
+        undoHistory.push(content);
+        content += teks;
+        redoHistory.clear();
     }
 
+    // Undo
     public static void undo() {
-        if (!undoStack.isEmpty()) {
-            redoStack.push(text);
-            text = undoStack.pop();
+        if (!undoHistory.isEmpty()) {
+            redoHistory.push(content);
+            content = undoHistory.pop();
         } else {
-            System.out.println("Tidak ada yang bisa di-undo!");
+            System.out.println("Tidak ada aksi untuk di-undo!");
         }
     }
 
+    // Redo
     public static void redo() {
-        if (!redoStack.isEmpty()) {
-            undoStack.push(text);
-            text = redoStack.pop();
+        if (!redoHistory.isEmpty()) {
+            undoHistory.push(content);
+            content = redoHistory.pop();
         } else {
-            System.out.println("Tidak ada yang bisa di-redo!");
+            System.out.println("Tidak ada aksi untuk di-redo!");
         }
     }
 
-    public static void show() {
-        System.out.println("Isi Text Editor:");
-        System.out.println(text.isEmpty() ? "(kosong)" : text);
+    // Show
+    public static void tampilkan() {
+        System.out.println("\nTeks saat ini: ");
+        if (content.isEmpty()) {
+            System.out.println("(kosong)");
+        } else {
+            System.out.println(content);
+        }
     }
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        int pilihan;
-        String tulisan;
+        Scanner sc = new Scanner(System.in);
+        int pilih;
 
         do {
-            System.out.println("\n========== MENU ==========");
+            System.out.println("\n----- TEXT EDITOR -----");
             System.out.println("1. Write");
             System.out.println("2. Undo");
             System.out.println("3. Redo");
             System.out.println("4. Show");
-            System.out.println("5. Exit");
+            System.out.println("5. Keluar");
             System.out.print("Pilih menu: ");
-            pilihan = input.nextInt();
-            input.nextLine();
+            pilih = sc.nextInt();
+            sc.nextLine();
 
-            switch (pilihan) {
+            switch (pilih) {
                 case 1:
                     System.out.print("Masukkan teks: ");
-                    tulisan = input.nextLine();
-                    write(tulisan);
+                    String teks = sc.nextLine();
+                    tambahTeks(teks);
                     break;
+
                 case 2:
                     undo();
                     break;
+
                 case 3:
                     redo();
                     break;
-                case 4:
-                    show();
-                    break;
-                case 5:
-                    System.out.println("Program selesai!");
-                    break;
-                default:
-                    System.out.println("Pilihan tidak valid!");
-            }
-        } while (pilihan != 5);
 
-        input.close();
+                case 4:
+                    tampilkan();
+                    break;
+
+                case 5:
+                    System.out.println("Terima kasih sudah menggunakan Text Editor!");
+                    break;
+
+                default:
+                    System.out.println("Pilihan tidak tersedia!");
+            }
+        } while (pilih != 5);
+
+        sc.close();
     }
 }
