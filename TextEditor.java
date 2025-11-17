@@ -10,7 +10,7 @@ public class TextEditor {
     // Menambah teks
     public static void tambahTeks(String teks) {
         undoHistory.push(content);
-        content += teks;
+        content += teks + "\n"; 
         redoHistory.clear();
     }
 
@@ -36,8 +36,8 @@ public class TextEditor {
 
     // Show
     public static void tampilkan() {
-        System.out.println("\nTeks saat ini: ");
-        if (content.isEmpty()) {
+        System.out.println("\n----- TEKS SAAT INI -----");
+        if (content.trim().isEmpty()) {
             System.out.println("(kosong)");
         } else {
             System.out.println(content);
@@ -65,23 +65,18 @@ public class TextEditor {
                     String teks = sc.nextLine();
                     tambahTeks(teks);
                     break;
-
                 case 2:
                     undo();
                     break;
-
                 case 3:
                     redo();
                     break;
-
                 case 4:
                     tampilkan();
                     break;
-
                 case 5:
-                    System.out.println("Terima kasih sudah menggunakan Text Editor!");
+                    System.out.println("Program selesai!");
                     break;
-
                 default:
                     System.out.println("Pilihan tidak tersedia!");
             }
